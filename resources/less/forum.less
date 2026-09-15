@@ -1,0 +1,774 @@
+// FORUM-MESSAGING-002 semantic tokens (keep small)
+:root {
+  --messages-directory-width: 320px;
+  --messages-directory-width-wide: 352px;
+  --messages-content-max-width: 860px;
+  --messages-composer-max-height: 144px;
+  --messages-row-min-height: 60px;
+  --messages-near-bottom-px: 100px;
+  // Fallback only; preferred path is height:100% inside the flex App frame.
+  --messages-header-offset: 52px;
+  --messages-shell-height: ~"calc(100vh - 52px)";
+  --messages-shell-height: ~"calc(100dvh - 52px)";
+}
+
+// Application frame: Messages fills remaining App space so phone drawer nav
+// cannot push document height past the viewport.
+.App--messages {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: ~"100vh";
+  height: ~"100dvh";
+  max-height: ~"100vh";
+  max-height: ~"100dvh";
+  min-height: 0 !important;
+  overflow: hidden;
+  // Flarum reserves bottom padding for the global discussion composer.
+  padding-bottom: 0 !important;
+
+  .App-navigation {
+    flex: 0 0 auto;
+  }
+
+  .App-content {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none;
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  // Mithril page root is a bare wrapper; pin it so Messages cannot grow the page.
+  .App-content > div:first-child {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  // Global discussion composer must not reserve page space on Messages.
+  .App-composer {
+    display: none;
+  }
+}
+
+.MessagesPage,
+.MessagesShell {
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  max-width: 100%;
+  overflow: hidden;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.MessagesPage :focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.MessagesPage-status,
+.MessagesPage-error {
+  padding: 24px 16px;
+  max-width: 36rem;
+}
+
+.MessagesPage-error {
+  color: var(--error-color);
+  padding: 8px 12px;
+}
+
+.MessagesPage-directory,
+.MessagesDirectoryPane,
+.MessagesPage-conversation,
+.MessagesConversationPane {
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.MessagesDirectoryPane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.MessagesDirectoryPane > div {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.MessagesPage-directoryHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px;
+  flex: 0 0 auto;
+}
+
+.MessagesPage-compose {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.MessagesPage-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  min-width: 0;
+}
+
+.MessagesPage-search {
+  padding: 0 12px 8px;
+  flex: 0 0 auto;
+}
+
+.MessagesPage-search .FormControl {
+  width: 100%;
+  max-width: 100%;
+}
+
+.MessagingFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 0 12px 12px;
+  flex: 0 0 auto;
+}
+
+.MessagingFilters-button {
+  min-width: 0;
+  min-height: 44px;
+}
+
+.ConversationDirectory {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ConversationRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
+  min-height: var(--messages-row-min-height);
+  overflow: hidden;
+  padding: 10px 12px;
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+}
+
+.ConversationRow.is-active {
+  background: var(--control-bg);
+}
+
+.ConversationRow.is-unread .ConversationRow-title {
+  font-weight: 700;
+}
+
+.ConversationRow-avatar,
+.ConversationRow-icon {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  object-fit: cover;
+}
+
+.ConversationRow-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--control-bg);
+}
+
+.ConversationRow-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.ConversationRow-title {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.ConversationRow-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--muted-color);
+  font-size: 12px;
+}
+
+.ConversationRow-kind,
+.ConversationRow-privacy {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.ConversationRow-privacy-text,
+.ConversationRow-activity {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ConversationRow-unread {
+  flex: 0 0 auto;
+  min-width: 16px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: var(--primary-color);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.MessagingEmptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 24px 12px;
+  min-width: 0;
+}
+
+.MessagingEmptyState-icon {
+  font-size: 28px;
+}
+
+.MessagesPage-conversationPane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.MessagesConversationHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--control-bg);
+  flex: 0 0 auto;
+}
+
+.MessagesPage-conversationBody {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.MessagesProviderSurface,
+.MessagesDirectSurface,
+.MessagesLiveSurface,
+.MessagesSyntheticSurface {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+.MessagesMessageViewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.MessagesComposer {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin: 0;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid var(--control-bg);
+  background: var(--body-bg);
+}
+
+.MessagesComposer-input,
+.MessagesComposer .FormControl {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 44px;
+  max-height: var(--messages-composer-max-height);
+  resize: none;
+  overflow-y: auto;
+  margin: 0;
+  padding: 10px 12px;
+  line-height: 1.35;
+}
+
+.MessagesComposer-send,
+.MessagesComposer .Button {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+  width: auto;
+  margin: 0;
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
+.MessagesJumpToLatest {
+  flex: 0 0 auto;
+  align-self: center;
+  margin: 4px 0;
+  min-height: 44px;
+}
+
+.MessagesSyntheticSurface-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  max-width: var(--messages-content-max-width);
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.MessagesSyntheticBubble {
+  max-width: 82%;
+  min-width: 0;
+}
+
+.MessagesSyntheticBubble--in {
+  align-self: flex-start;
+}
+
+.MessagesSyntheticBubble--out {
+  align-self: flex-end;
+}
+
+.MessagesSyntheticBubble-meta {
+  color: var(--muted-color);
+  font-size: 11px;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.MessagesSyntheticBubble-body {
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--control-bg);
+  color: var(--text-color);
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.MessagesSyntheticBubble--out .MessagesSyntheticBubble-body {
+  background: color-mix(in srgb, var(--primary-color) 18%, var(--control-bg));
+}
+
+.MessagesConversationHeader-back {
+  display: none;
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+}
+
+.MessagesConversationHeader-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.MessagesConversationHeader-avatar,
+.MessagesConversationHeader-icon {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.MessagesConversationHeader-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--control-bg);
+}
+
+.MessagesConversationHeader-title {
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+// Centered Messages-route brand in the existing Flarum header.
+// Use header color tokens so light and dark forum themes both remain readable.
+// Hardcoded white is production-dark-only and vanishes on light disposable headers.
+.App-header {
+  position: relative;
+}
+
+.MessagesBrandLink {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  color: var(--header-color, #ffffff);
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  pointer-events: auto;
+}
+
+.MessagesBrandLink:hover,
+.MessagesBrandLink:focus,
+.MessagesBrandLink:focus-visible {
+  color: var(--header-color, #ffffff);
+  text-decoration: none;
+  opacity: 0.92;
+}
+
+// Phone: HeaderPrimary lives inside the off-canvas drawer, so pin a Messages-shell
+// brand copy in the visible top chrome (outside the transformed drawer).
+.MessagesBrandLink--mobilePinned {
+  display: none;
+}
+
+.FlatRateMessagesNav {
+  position: relative;
+}
+
+.FlatRateMessagesNav-unread {
+  position: absolute;
+  top: 2px;
+  left: 18px;
+  background: var(--header-control-color);
+  color: var(--header-bg);
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 4px 3px;
+  line-height: 1em;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--header-bg);
+  min-width: 16px;
+  height: 16px;
+  text-align: center;
+}
+
+// ---------------------------------------------------------------------------
+// Unified Direct conversation polish — scoped to Messages only (V1 provider).
+// Do not restyle legacy ConversationsList pages.
+// ---------------------------------------------------------------------------
+.MessagesPage-conversationPane--direct {
+  .chat {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  // Shell header owns recipient identity inside Messages
+  .chat > .chat-header {
+    display: none !important;
+  }
+
+  .startConvo {
+    display: none !important;
+  }
+
+  .chat-history {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 12px 12px 8px;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .chat-history ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: var(--messages-content-max-width);
+    margin-inline: auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .chat-history li,
+  .chat-history li.message-content {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .message-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 78%;
+  }
+
+  .message-content.me,
+  .message-content.message-content--own,
+  li.message-content.me {
+    align-self: flex-end;
+    align-items: flex-end;
+  }
+
+  .message-content:not(.me),
+  li.message-content:not(.me) {
+    align-self: flex-start;
+    align-items: flex-start;
+  }
+
+  .message-data {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted-color);
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .message-text-and-indicators {
+    display: inline-flex;
+    align-items: flex-end;
+    gap: 6px;
+    max-width: 100%;
+  }
+
+  .message-text-and-indicators .message-text,
+  .message-content .message-text,
+  .message-content p {
+    margin: 0;
+    padding: 8px 12px;
+    border-radius: 14px;
+    background: var(--control-bg);
+    color: var(--text-color);
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+  }
+
+  .message-content.me .message-text,
+  .message-content.me p,
+  li.message-content.me .message-text {
+    background: color-mix(in srgb, var(--primary-color) 18%, var(--control-bg));
+  }
+
+  .message-content img,
+  .message-text img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+
+  .chat-message {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    margin: 0;
+    padding: 8px 12px calc(8px + env(safe-area-inset-bottom, 0px));
+    border-top: 1px solid var(--control-bg);
+    background: var(--body-bg);
+  }
+
+  .chat-message textarea,
+  .chat-message .FormControl {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 44px;
+    max-height: var(--messages-composer-max-height);
+    resize: none;
+    overflow-y: auto;
+    margin: 0;
+    padding: 10px 12px;
+    line-height: 1.35;
+  }
+
+  .chat-message .Button {
+    flex: 0 0 auto;
+    min-width: 44px;
+    min-height: 44px;
+    width: auto;
+    margin: 0;
+    padding: 0 14px;
+    white-space: nowrap;
+  }
+}
+
+@media @phone {
+  .FlatRateMessagesNav-unread {
+    left: 20px;
+  }
+
+  .MessagesBrandLink--mobilePinned {
+    display: block;
+    position: fixed;
+    top: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1100;
+    color: var(--header-color, #111111);
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 1.2;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .MessagesPage.viewing-conversation .MessagesPage-directory {
+    display: none;
+  }
+
+  .MessagesPage:not(.viewing-conversation) .MessagesPage-conversation {
+    display: none;
+  }
+
+  .MessagesConversationHeader-back {
+    display: inline-flex;
+  }
+
+  .MessagesPage-directory,
+  .MessagesPage-conversation,
+  .MessagesPage-conversationPane {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .MessagesSyntheticBubble {
+    max-width: 82%;
+  }
+}
+
+@media @tablet-up {
+  .FlatRateMessagesNav {
+    .Button--icon();
+  }
+
+  .MessagesPage,
+  .MessagesShell {
+    display: grid;
+    grid-template-columns: var(--messages-directory-width) minmax(0, 1fr);
+    height: 100%;
+    max-height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .MessagesPage-directory,
+  .MessagesDirectoryPane {
+    border-right: 1px solid var(--control-bg);
+    overflow: hidden;
+  }
+
+  .MessagesPage-conversation,
+  .MessagesConversationPane {
+    overflow: hidden;
+    min-height: 0;
+    height: 100%;
+  }
+
+  .MessagesConversationHeader-back {
+    display: none !important;
+  }
+
+  .MessagesPage-conversationPane--direct .message-content,
+  .MessagesSyntheticBubble {
+    max-width: 76%;
+  }
+}
+
+@media (min-width: 1280px) {
+  .MessagesPage,
+  .MessagesShell {
+    grid-template-columns: var(--messages-directory-width-wide) minmax(0, 1fr);
+  }
+
+  .MessagesPage-conversationPane--direct .message-content,
+  .MessagesSyntheticBubble {
+    // Avoid CSS min(%, rem): Flarum's PHP less.php cannot evaluate mixed units.
+    max-width: 42rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .MessagesPage,
+  .ConversationRow,
+  .MessagesPage-directoryHeader {
+    overflow-x: hidden;
+  }
+
+  .MessagesBrandLink {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .MessagesPage *,
+  .MessagesShell * {
+    scroll-behavior: auto !important;
+  }
+}
