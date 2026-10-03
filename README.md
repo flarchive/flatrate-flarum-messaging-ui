@@ -2,13 +2,21 @@
 
 > **Read-only archive of released versions of flatrate/flarum-messaging-ui.** Not for installation: use [Packagist](https://packagist.org/packages/flatrate/flarum-messaging-ui) or the [upstream repository](https://github.com/mrkcntrmn/flatrate-flarum-messaging-ui).
 
-**0** versions archived · Latest: [`v1.5.0`](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.5.0) · License: `MIT` · Flarum: `^1.8.19`
+**9** versions archived · Latest: [`v1.5.0`](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.5.0) · License: `MIT` · Flarum: `^1.8.19`
 
 ## Archived Versions
 
 | Version | Released | Flarum | Source |
 |---|---|---|---|
-| — | — | — | — |
+| `v1.0.0` | 2026-09-14 | `^1.8.5` | [Browse](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.0.0) |
+| `v1.0.1` | 2026-09-14 | `^1.8.5` | [Browse](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.0.1) |
+| `v1.1.0` | 2026-09-15 | `^1.8.5` | [Browse](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.1.0) |
+| `v1.1.1` | 2026-09-15 | `^1.8.5` | [Browse](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.1.1) |
+| `v1.2.0` | 2026-09-15 | `^1.8.5` | [Browse](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.2.0) |
+| `v1.3.0` | 2026-09-15 | `^1.8.5` | [Browse](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.3.0) |
+| `v1.3.1` | 2026-09-16 | `^1.8.5` | [Browse](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.3.1) |
+| `v1.4.0` | 2026-09-16 | `^1.8.5` | [Browse](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.4.0) |
+| `v1.5.0` | 2026-09-27 | `^1.8.19` | [Browse](https://github.com/flarchive/flatrate-flarum-messaging-ui/tree/archive/v1.5.0) |
 
 Catalog entry: [packages/flatrate-flarum-messaging-ui.json](https://github.com/flarchive/archive-index/blob/main/packages/flatrate-flarum-messaging-ui.json)
 
